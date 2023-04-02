@@ -92,6 +92,7 @@ TASK_ID taskSpawn
     pthread_attr_destroy(&attributes);
 
     if (status != 0) {
+        free((void*) task);
         return NULL;
     }
 
