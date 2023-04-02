@@ -92,7 +92,7 @@ TASK_ID taskSpawn
     pthread_attr_destroy(&attributes);
 
     if (status != 0) {
-        return (void*) (uintptr_t) status;
+        return NULL;
     }
 
     return (void*) task;
