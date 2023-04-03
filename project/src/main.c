@@ -1,8 +1,10 @@
 #include "vector.h"
 #include <stdio.h>
 #include <taskLib.h>
+#include <semLib.h>
+#include <stdlib.h>
 
-int runMe(int a);
+int runMe(size_t argA, size_t argSemBin);
 
 int main() {
 
@@ -30,9 +32,16 @@ int main() {
 
     vector_delete(&vec);
 
+    SEM_ID semBin = semBCreate(0, SEM_EMPTY);
+
+    if (semBin == NULL) {
+        printf("Failed to create semaphore\n");
+        exit(-1);
+    }
+
     TASK_ID task = taskSpawn("", 100, 0, 0x2000, (FUNCPTR) runMe,
                                             5,
-                                            0,
+                                            (size_t) semBin,
                                             0,
                                             0,
                                             0,
@@ -48,7 +57,9 @@ int main() {
 
     printf("Hello again from main thread\n");
 
-    taskDelete(task);
+    taskDelay(4000);
+
+    semGive(semBin);
 
     // Would not be required on VxWorks, since tasks detach
     for (;;) {}
@@ -56,12 +67,15 @@ int main() {
     return 0;
 }
 
-int runMe(int a) {
+int runMe(size_t argA, size_t argSemBin) {
+    int a = (int) argA;
+    SEM_ID semBin = (SEM_ID) argSemBin;
+
+    printf("Waiting to print...\n");
+
+    semTake(semBin, WAIT_FOREVER);
+
     printf("Number that I was given: %d\n", a);
-
-    taskDelay(5000);
-
-    printf("I lived!\n");
 
     return 0;
 }

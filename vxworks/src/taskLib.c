@@ -1,6 +1,6 @@
 #include "taskLib.h"
 #include "sysLib.h"
-#include <asm-generic/errno-base.h>
+#include "helpers.h"
 #include <stddef.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -8,12 +8,8 @@
 #include <time.h>
 #include <errno.h>
 
-// Helpful defines
-#define NANOSECONDS_PER_SECOND 1000000000
-
 // Helper function definitions
 void* _preEntryPoint(void* args);
-struct timespec _ticksToTimespec(int ticks);
 
 /************************** Helper structs ***********************************/
 
@@ -135,29 +131,6 @@ STATUS taskDelay(int ticks) {
 /************************ Helper functions ***********************************/
 
 /**
- * Converts a tick value to a timespec structure
- */
-struct timespec _ticksToTimespec(int ticks) {
-
-    double ticksFloat = (double) ticks;
-    double clkRate = (double) sysClkRateGet();
-    double seconds = ticksFloat / clkRate;
-
-    time_t sec = (time_t) seconds;
-
-    double nanoseconds = (seconds - (double) sec) * NANOSECONDS_PER_SECOND;
-
-    long nsec = (long) nanoseconds;
-
-    struct timespec spec;
-
-    spec.tv_sec = sec;
-    spec.tv_nsec = nsec;
-
-    return spec;
-}
-
-/**
  * The entry point of all threads spawned using this API. The purpose of this
  * is to allow multiple (10 to be exact) arguments to be passed to a thread's
  * entry point instead of just one. This reads the void* to the vxworksTaskArgs_t
@@ -180,15 +153,15 @@ void* _preEntryPoint(void* args) {
     // function so that we can free the vxworksTaskArgs_t structure
     FUNCPTR entryPt = taskArgs->realEntryPt;
     size_t arg1 = taskArgs->arg1;
-    size_t arg2 = taskArgs->arg1;
-    size_t arg3 = taskArgs->arg1;
-    size_t arg4 = taskArgs->arg1;
-    size_t arg5 = taskArgs->arg1;
-    size_t arg6 = taskArgs->arg1;
-    size_t arg7 = taskArgs->arg1;
-    size_t arg8 = taskArgs->arg1;
-    size_t arg9 = taskArgs->arg1;
-    size_t arg10 = taskArgs->arg1;
+    size_t arg2 = taskArgs->arg2;
+    size_t arg3 = taskArgs->arg3;
+    size_t arg4 = taskArgs->arg4;
+    size_t arg5 = taskArgs->arg5;
+    size_t arg6 = taskArgs->arg6;
+    size_t arg7 = taskArgs->arg7;
+    size_t arg8 = taskArgs->arg8;
+    size_t arg9 = taskArgs->arg9;
+    size_t arg10 = taskArgs->arg10;
 
     free(args);
 
