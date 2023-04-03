@@ -79,6 +79,8 @@ int main() {
     int c = 69;
     msgQSend(msgQ, (char*) &c, sizeof(int), WAIT_FOREVER, MSG_PRI_URGENT);
 
+    printf("Num messages queued: %d\n", msgQNumMsgs(msgQ));
+
     c = 10;
     msgQSend(msgQ, (char*) &c, sizeof(int), WAIT_FOREVER, MSG_PRI_NORMAL);
 

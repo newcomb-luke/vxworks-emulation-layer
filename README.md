@@ -33,12 +33,12 @@ for our project, but also sports a shiny VxWorks emulation layer.
     - [x] semGive()
     - [x] semTake()
     - [x] semDelete()
-- [ ] msgQLib
-    - [ ] msgQCreate()
-    - [ ] msgQDelete()
-    - [ ] msgQSend()
-    - [ ] msgQReceive()
-    - [ ] msgQNumMsgs()
+- [x] msgQLib
+    - [x] msgQCreate()
+    - [x] msgQDelete()
+    - [x] msgQSend()
+    - [x] msgQReceive()
+    - [x] msgQNumMsgs()
 - [ ] wdLib
     - [ ] wdCreate()
     - [ ] wdDelete()
