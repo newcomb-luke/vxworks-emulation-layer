@@ -4,4 +4,4 @@ project(vxworks)
 
 include_directories(include)
 
-add_library(vxworks src/taskLib.c src/sysLib.c src/semLib.c src/helpers.c)
+add_library(vxworks src/taskLib.c src/sysLib.c src/semLib.c src/helpers.c src/msgQLib.c)
