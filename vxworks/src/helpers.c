@@ -23,3 +23,26 @@ struct timespec _ticksToTimespec(int ticks) {
 
     return spec;
 }
+
+struct timespec _ticksToAbsoluteTimespec(int ticks) {
+    // This requires an *absolute* timestamp, not a relative one. So
+    // we need to query the current time
+    
+    struct timespec currentTime;
+
+    clock_gettime(CLOCK_REALTIME, &currentTime);
+
+    struct timespec relativeTime = _ticksToTimespec(ticks);
+
+    struct timespec absTime;
+
+    absTime.tv_nsec = currentTime.tv_nsec + relativeTime.tv_nsec;
+    absTime.tv_sec = currentTime.tv_sec + relativeTime.tv_sec;
+
+    // Keep the timespec valid
+    int extraSeconds = absTime.tv_nsec / NANOSECONDS_PER_SECOND;
+    absTime.tv_nsec -= extraSeconds * NANOSECONDS_PER_SECOND;
+    absTime.tv_sec += extraSeconds;
+
+    return absTime;
+}

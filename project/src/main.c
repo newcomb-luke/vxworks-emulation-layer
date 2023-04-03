@@ -3,8 +3,9 @@
 #include <taskLib.h>
 #include <semLib.h>
 #include <stdlib.h>
+#include <msgQLib.h>
 
-int runMe(size_t argA, size_t argSemBin);
+int runMe(size_t argA, size_t argSemBin, size_t argMsgQ);
 
 int main() {
 
@@ -39,10 +40,17 @@ int main() {
         exit(-1);
     }
 
+    MSG_Q_ID msgQ = msgQCreate(10, sizeof(int), MSG_Q_FIFO);
+
+    if (msgQ == NULL) {
+        printf("Failed to create message queue\n");
+        exit(-1);
+    }
+
     TASK_ID task = taskSpawn("", 100, 0, 0x2000, (FUNCPTR) runMe,
                                             5,
                                             (size_t) semBin,
-                                            0,
+                                            (size_t) msgQ,
                                             0,
                                             0,
                                             0,
@@ -61,23 +69,55 @@ int main() {
 
     semGive(semBin);
 
+    taskDelay(500);
+
+    for (int i = 0; i < 9; i++) {
+        int b = i * 3;
+        msgQSend(msgQ, (char*) &b, sizeof(int), WAIT_FOREVER, MSG_PRI_NORMAL);
+    }
+
+    int c = 69;
+    msgQSend(msgQ, (char*) &c, sizeof(int), WAIT_FOREVER, MSG_PRI_URGENT);
+
+    c = 10;
+    msgQSend(msgQ, (char*) &c, sizeof(int), WAIT_FOREVER, MSG_PRI_NORMAL);
+
+    taskDelay(500);
+
+    semGive(semBin);
+
+    printf("Parent task is done!\n");
+
     // Would not be required on VxWorks, since tasks detach
     for (;;) {}
 
     return 0;
 }
 
-int runMe(size_t argA, size_t argSemBin) {
+int runMe(size_t argA, size_t argSemBin, size_t argMsgQ) {
     int a = (int) argA;
     SEM_ID semBin = (SEM_ID) argSemBin;
+    MSG_Q_ID msgQ = (MSG_Q_ID) argMsgQ;
 
     printf("Waiting to print...\n");
 
     semTake(semBin, WAIT_FOREVER);
 
     printf("Number that I was given: %d\n", a);
-    
-    semDelete(semBin);
+
+    // semTake(semBin, WAIT_FOREVER);
+
+    for (int i = 0; i < 11; i++) {
+        int b = 0;
+
+        msgQReceive(msgQ, (char*) &b, sizeof(int), WAIT_FOREVER);
+
+        printf("Received: %d\n", b);
+    }
+
+    printf("task runMe is done!\n");
+
+    msgQDelete(msgQ);
 
     return 0;
 }

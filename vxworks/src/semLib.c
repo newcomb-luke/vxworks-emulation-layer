@@ -1,22 +1,11 @@
 #include "semLib.h"
 #include "helpers.h"
-#include <bits/time.h>
 #include <pthread.h>
 #include <stddef.h>
 #include <semaphore.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-#define THREAD_SHARED 0
-
-// Helper function definitions
-
-/**
- * Returns a timespec that contains the absolute time of the provided ticks
- * relative to now.
- */
-struct timespec _ticksToAbsoluteTimespec(int ticks);
 
 /**************************** Helper types ***********************************/
 
@@ -149,7 +138,7 @@ SEM_ID semBCreate(int options, SEM_B_STATE state) {
     vxworksSem_t* sem = (vxworksSem_t*) malloc(sizeof(vxworksSem_t));
     sem->type = SEM_BIN;
 
-    int status = sem_init(&(sem->inner.sem), THREAD_SHARED, semState);
+    int status = sem_init(&(sem->inner.sem), PTHREAD_PROCESS_PRIVATE, semState);
 
     if (status != 0) {
         free((void*) sem);
@@ -192,7 +181,7 @@ SEM_ID semCCreate(int options, int count) {
     vxworksSem_t* sem = (vxworksSem_t*) malloc(sizeof(vxworksSem_t));
     sem->type = SEM_COUNT;
 
-    int status = sem_init(&(sem->inner.sem), THREAD_SHARED, count);
+    int status = sem_init(&(sem->inner.sem), PTHREAD_PROCESS_PRIVATE, count);
 
     if (status != 0) {
         free((void*) sem);
@@ -200,29 +189,4 @@ SEM_ID semCCreate(int options, int count) {
     }
 
     return (void*) sem;
-}
-
-/************************ Helper functions ***********************************/
-
-struct timespec _ticksToAbsoluteTimespec(int ticks) {
-    // This requires an *absolute* timestamp, not a relative one. So
-    // we need to query the current time
-    
-    struct timespec currentTime;
-
-    clock_gettime(CLOCK_REALTIME, &currentTime);
-
-    struct timespec relativeTime = _ticksToTimespec(ticks);
-
-    struct timespec absTime;
-
-    absTime.tv_nsec = currentTime.tv_nsec + relativeTime.tv_nsec;
-    absTime.tv_sec = currentTime.tv_sec + relativeTime.tv_sec;
-
-    // Keep the timespec valid
-    int extraSeconds = absTime.tv_nsec / NANOSECONDS_PER_SECOND;
-    absTime.tv_nsec -= extraSeconds * NANOSECONDS_PER_SECOND;
-    absTime.tv_sec += extraSeconds;
-
-    return absTime;
 }

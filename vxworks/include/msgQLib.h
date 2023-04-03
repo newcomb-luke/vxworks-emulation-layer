@@ -30,3 +30,8 @@ STATUS msgQSend(MSG_Q_ID msgQId, char* buffer, uint nBytes, int timeout, int pri
  * Receives a message on a message queue
  */
 STATUS msgQReceive(MSG_Q_ID msgQId, char* buffer, uint maxNBytes, int timeout);
+
+/**
+ * Get the number of messages queued to a message queue, or -1 if error
+ */
+int msgQNumMsgs(MSG_Q_ID msgQId);
