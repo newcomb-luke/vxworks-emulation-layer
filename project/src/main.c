@@ -57,7 +57,7 @@ int main() {
 
     printf("Hello again from main thread\n");
 
-    taskDelay(4000);
+    taskDelay(500);
 
     semGive(semBin);
 
@@ -76,6 +76,8 @@ int runMe(size_t argA, size_t argSemBin) {
     semTake(semBin, WAIT_FOREVER);
 
     printf("Number that I was given: %d\n", a);
+    
+    semDelete(semBin);
 
     return 0;
 }
