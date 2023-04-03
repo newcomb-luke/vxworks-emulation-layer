@@ -18,8 +18,6 @@ STATUS semGive(SEM_ID sem_id);
 
 STATUS semTake(SEM_ID sem_id, int timeout);
 
-STATUS semFlush(SEM_ID sem_id);
-
 STATUS semDelete(SEM_ID sem_id);
 
 SEM_ID semBCreate(int options, SEM_B_STATE state);

@@ -118,13 +118,6 @@ STATUS semTake(SEM_ID sem_id, int timeout) {
     return status;
 }
 
-STATUS semFlush(SEM_ID sem_id) {
-    // This function is a no-op :(
-    // I couldn't find any way to implement this
-    
-    return 0;
-}
-
 STATUS semDelete(SEM_ID sem_id) {
     vxworksSem_t* sem = (vxworksSem_t*) sem_id;
     int status = 0;
