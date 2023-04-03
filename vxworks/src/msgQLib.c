@@ -134,6 +134,10 @@ STATUS msgQDelete(MSG_Q_ID msgQId) {
     int status = 0;
     vxworksMsgQ_t* msgQ = (vxworksMsgQ_t*) msgQId;
 
+    if (msgQ == NULL) {
+        return -1;
+    }
+
     status |= sem_destroy(&(msgQ->semRecv));
     status |= sem_destroy(&(msgQ->semSend));
 
@@ -157,6 +161,10 @@ STATUS msgQSend(MSG_Q_ID msgQId, char* buffer, uint nBytes, int timeout, int pri
 
     int status = 0;
     vxworksMsgQ_t* msgQ = (vxworksMsgQ_t*) msgQId;
+
+    if (msgQ == NULL) {
+        return -1;
+    }
     
     // Wait forever
     if (timeout < 0) {
@@ -231,6 +239,10 @@ STATUS msgQReceive(MSG_Q_ID msgQId, char* buffer, uint maxNBytes, int timeout) {
     int status = 0;
     vxworksMsgQ_t* msgQ = (vxworksMsgQ_t*) msgQId;
 
+    if (msgQ == NULL) {
+        return -1;
+    }
+
     // Wait forever
     if (timeout < 0) {
         if ( 0 != sem_wait(&(msgQ->semRecv)) ) {
@@ -280,6 +292,10 @@ int msgQNumMsgs(MSG_Q_ID msgQId) {
 
     vxworksMsgQ_t* msgQ = (vxworksMsgQ_t*) msgQId;
     int numMsgs = -1;
+
+    if (msgQ == NULL) {
+        return -1;
+    }
 
     if ( 0 != pthread_mutex_lock(&(msgQ->mutex)) ) {
         return -1;

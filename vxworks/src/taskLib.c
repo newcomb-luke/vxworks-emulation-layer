@@ -99,7 +99,13 @@ TASK_ID taskSpawn
  * Deletes a VxWorks style task
  */
 STATUS taskDelete(TASK_ID tid) {
-    int status =  pthread_cancel(((vxworksTask_t*)(tid))->thread);
+    vxworksTask_t* task = (vxworksTask_t*) tid;
+
+    if (task == NULL) {
+        return -1;
+    }
+
+    int status =  pthread_cancel(task->thread);
 
     free(tid);
 

@@ -33,6 +33,10 @@ STATUS semGive(SEM_ID sem_id) {
     vxworksSem_t* sem = (vxworksSem_t*) sem_id;
     int status = 0;
 
+    if (sem == NULL) {
+        return -1;
+    }
+
     // If we are a binary semaphore, the count should never go over 1
     if (sem->type == SEM_BIN) {
         int semaphoreValue = 0;
@@ -64,6 +68,10 @@ STATUS semGive(SEM_ID sem_id) {
 STATUS semTake(SEM_ID sem_id, int timeout) {
     vxworksSem_t* sem = (vxworksSem_t*) sem_id;
     int status = 0;
+
+    if (sem == NULL) {
+        return -1;
+    }
 
     // If we are a binary or counting semaphore
     if (sem->type == SEM_BIN || sem->type == SEM_COUNT) {
@@ -110,6 +118,10 @@ STATUS semTake(SEM_ID sem_id, int timeout) {
 STATUS semDelete(SEM_ID sem_id) {
     vxworksSem_t* sem = (vxworksSem_t*) sem_id;
     int status = 0;
+
+    if (sem == NULL) {
+        return -1;
+    }
 
     // If we are a binary or counting semaphore
     if (sem->type == SEM_BIN || sem->type == SEM_COUNT) {
