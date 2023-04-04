@@ -3,6 +3,9 @@
 This repository contains a shiny new VxWorks emulation layer for testing
 code on Linux.
 
+This code is more of a proof of concept and prototype rather than something that
+should be used for rigorous testing.
+
 ## VxWorks Emulation Layer Roadmap
 
 - [x] sysLib
