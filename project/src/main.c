@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <msgQLib.h>
 #include <wdLib.h>
+#include <sigLib.h>
 
 int runMe(size_t argA, size_t argSemBin, size_t argMsgQ);
 void repeatMe(int a);
