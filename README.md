@@ -62,5 +62,5 @@ for our project, but also sports a shiny VxWorks emulation layer.
     - [x] sigblock()
     - [x] raise()
     - [x] kill()
-- [ ] tickLib
-    - [ ] tickGet()
+- [x] tickLib
+    - [x] tickGet()
