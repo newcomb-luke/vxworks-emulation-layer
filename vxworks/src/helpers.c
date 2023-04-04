@@ -1,6 +1,8 @@
 #include "helpers.h"
 #include "sysLib.h"
 
+extern int g_sysClkRate;
+
 /**
  * Converts a tick value to a timespec structure
  */
@@ -45,4 +47,29 @@ struct timespec _ticksToAbsoluteTimespec(int ticks) {
     absTime.tv_sec += extraSeconds;
 
     return absTime;
+}
+
+unsigned long _timespecToTicks(struct timespec spec) {
+    double seconds = (double) spec.tv_sec;
+
+    seconds += ((double) spec.tv_nsec) / ((double) NANOSECONDS_PER_SECOND);
+
+    return (unsigned long)( seconds * ((double) g_sysClkRate) );
+}
+
+struct timespec _subtractTimespecs(struct timespec before, struct timespec after) {
+    struct timespec result;
+
+    time_t seconds = after.tv_sec - before.tv_sec;
+    long long nanoseconds = after.tv_nsec - before.tv_nsec;
+
+    if (nanoseconds < 0) {
+        seconds--;
+        nanoseconds += NANOSECONDS_PER_SECOND;
+    }
+
+    result.tv_sec = seconds;
+    result.tv_nsec = (size_t) nanoseconds;
+
+    return result;
 }

@@ -1,3 +1,4 @@
+#include "sysLib.h"
 #include "vector.h"
 #include <stdio.h>
 #include <taskLib.h>
@@ -6,6 +7,7 @@
 #include <msgQLib.h>
 #include <wdLib.h>
 #include <sigLib.h>
+#include <tickLib.h>
 
 int runMe(size_t argA, size_t argSemBin, size_t argMsgQ);
 void repeatMe(int a);
@@ -94,7 +96,12 @@ int main() {
     printf("Parent task is done!\n");
 
     // Would not be required on VxWorks, since tasks detach
-    for (;;) {}
+    for (;;) {
+
+        printf("Current time in ticks: %lu\n", tickGet());
+
+        taskDelay(40);
+    }
 
     return 0;
 }
