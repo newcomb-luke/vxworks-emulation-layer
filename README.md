@@ -1,21 +1,7 @@
-# Testing Repository for our Real-Time Embedded Systems Final Project
+# VxWorks Emulation Repository for our Real-Time Embedded Systems Final Project
 
-This repository contains not only platform-agnostic C code that is being tested
-for our project, but also sports a shiny VxWorks emulation layer.
-
-## Final Project Roadmap
-
-- [ ] Simulator
-    - [ ] Calculations
-    - [ ] Sensor Writing
-        - [ ] Level Sensor Writing
-        - [ ] Temperature Sensor Writing
-        - [ ] Pressure Sensor Writing
-- [ ] Controller
-    - [ ] Sensor Reading
-        - [ ] Level Sensor Reading
-        - [ ] Temperature Sensor Reading
-        - [ ] Pressure Sensor Reading
+This repository contains a shiny new VxWorks emulation layer for testing
+code on Linux.
 
 ## VxWorks Emulation Layer Roadmap
 
