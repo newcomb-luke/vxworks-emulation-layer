@@ -4,8 +4,12 @@
 #include <semLib.h>
 #include <stdlib.h>
 #include <msgQLib.h>
+#include <wdLib.h>
 
 int runMe(size_t argA, size_t argSemBin, size_t argMsgQ);
+void repeatMe(int a);
+
+WDOG_ID wd;
 
 int main() {
 
@@ -86,8 +90,6 @@ int main() {
 
     taskDelay(500);
 
-    semGive(semBin);
-
     printf("Parent task is done!\n");
 
     // Would not be required on VxWorks, since tasks detach
@@ -107,8 +109,6 @@ int runMe(size_t argA, size_t argSemBin, size_t argMsgQ) {
 
     printf("Number that I was given: %d\n", a);
 
-    // semTake(semBin, WAIT_FOREVER);
-
     for (int i = 0; i < 11; i++) {
         int b = 0;
 
@@ -117,9 +117,36 @@ int runMe(size_t argA, size_t argSemBin, size_t argMsgQ) {
         printf("Received: %d\n", b);
     }
 
-    printf("task runMe is done!\n");
-
     msgQDelete(msgQ);
 
+    wd = wdCreate();
+
+    if (wd == NULL) {
+        printf("Failed to create watchdog timer\n");
+        return -1;
+    }
+
+    int status = wdStart(wd, 200, (FUNCPTR) repeatMe, 420);
+
+    if (status != 0) {
+        printf("Failed to start watchdog timer\n");
+        return -1;
+    }
+
+    taskDelay(6000);
+
+    wdCancel(wd);
+    wdDelete(wd);
+
+    printf("task runMe is done!\n");
+
     return 0;
+}
+
+void repeatMe(int a) {
+    wdStart(wd, 200, (FUNCPTR) repeatMe, a + 1);
+
+    printf("a: %d\n", a);
+
+    taskDelay(40);
 }
