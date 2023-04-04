@@ -45,6 +45,22 @@ for our project, but also sports a shiny VxWorks emulation layer.
     - [x] wdStart()
     - [x] wdCancel()
 - [ ] sigLib
-    - [ ] #include <signal.h>
+    - [ ] sigemptyset()
+    - [ ] sigfillset()
+    - [ ] sigaddset()
+    - [ ] sigdelset()
+    - [ ] sigismember()
+    - [ ] signal()
+    - [ ] sigaction()
+    - [ ] sigprocmask()
+    - [ ] sigpending()
+    - [ ] sigsuspend()
+    - [ ] pause()
+    - [ ] sigtimedwait()
+    - [ ] sigwaitinfo()
+    - [ ] sigsetmask()
+    - [ ] sigblock()
+    - [ ] raise()
+    - [ ] kill()
 - [ ] tickLib
     - [ ] tickGet()
