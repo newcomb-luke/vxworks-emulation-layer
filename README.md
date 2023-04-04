@@ -39,11 +39,11 @@ for our project, but also sports a shiny VxWorks emulation layer.
     - [x] msgQSend()
     - [x] msgQReceive()
     - [x] msgQNumMsgs()
-- [ ] wdLib
-    - [ ] wdCreate()
-    - [ ] wdDelete()
-    - [ ] wdStart()
-    - [ ] wdCancel()
+- [x] wdLib
+    - [x] wdCreate()
+    - [x] wdDelete()
+    - [x] wdStart()
+    - [x] wdCancel()
 - [ ] sigLib
     - [ ] #include <signal.h>
 - [ ] tickLib
