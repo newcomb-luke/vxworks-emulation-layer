@@ -23,6 +23,8 @@ WDOG_ID wdCreate(void) {
 
     vxworksWdTimer_t* timer = (vxworksWdTimer_t*) malloc(sizeof(vxworksWdTimer_t));
 
+    timer->inner = NULL;
+
     return (void*) timer;
 }
 
