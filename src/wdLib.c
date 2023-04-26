@@ -76,14 +76,11 @@ STATUS wdStart(WDOG_ID wdId, int delay, FUNCPTR pRoutine, size_t parameter) {
     // required, or we end up segfaulting.
 
     struct sigevent ev;
-    union sigval val;
 
     memset(&ev, 0, sizeof(struct sigevent));
 
-    val.sival_ptr = (void*) parameter;
-
     ev.sigev_notify = SIGEV_THREAD;
-    ev.sigev_value = val;
+    ev.sigev_value.sival_ptr = (void*) parameter;
     ev.sigev_notify_function = (void (*)(union sigval) ) pRoutine;
 
     int status = timer_create(CLOCK_REALTIME, &ev, timer->inner);
