@@ -11,6 +11,15 @@ typedef struct {
     timer_t* inner;
 } vxworksWdTimer_t;
 
+typedef struct {
+    void* timerArg;
+    FUNCPTR callback;
+} vxworksWdTimerPreArgs_t;
+
+/************************** Helper functions ***********************************/
+
+void _timerPreFunction(union sigval);
+
 /************************ Library functions **********************************/
 
 WDOG_ID wdCreate(void) {
@@ -74,14 +83,18 @@ STATUS wdStart(WDOG_ID wdId, int delay, FUNCPTR pRoutine, size_t parameter) {
     // is no use of memset() to clear it before using it. When reusing the same
     // memory for multiple timer_create calls, it seems like it is actually
     // required, or we end up segfaulting.
+    
+    vxworksWdTimerPreArgs_t* preArgs = malloc(sizeof(vxworksWdTimerPreArgs_t));
+    preArgs->timerArg = (void*) parameter;
+    preArgs->callback = pRoutine;
 
     struct sigevent ev;
 
     memset(&ev, 0, sizeof(struct sigevent));
 
     ev.sigev_notify = SIGEV_THREAD;
-    ev.sigev_value.sival_ptr = (void*) parameter;
-    ev.sigev_notify_function = (void (*)(union sigval) ) pRoutine;
+    ev.sigev_value.sival_ptr = preArgs;
+    ev.sigev_notify_function = _timerPreFunction;
 
     int status = timer_create(CLOCK_REALTIME, &ev, timer->inner);
 
@@ -129,4 +142,16 @@ STATUS wdCancel(WDOG_ID wdId) {
     timer->inner = NULL;
 
     return 0;
+}
+
+/************************** Helper functions ***********************************/
+
+void _timerPreFunction(union sigval value) {
+    vxworksWdTimerPreArgs_t* preArgs = value.sival_ptr;
+    void (*callback)(void*) = (void (*)(void*)) preArgs->callback;
+    void* argument = preArgs->timerArg;
+
+    free(preArgs);
+
+    callback(argument);
 }
