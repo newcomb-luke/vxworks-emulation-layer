@@ -88,9 +88,6 @@ STATUS wdStart(WDOG_ID wdId, int delay, FUNCPTR pRoutine, size_t parameter) {
     preArgs->timerArg = (void*) parameter;
     preArgs->callback = pRoutine;
 
-    printf("Parameter: %lu\n", parameter);
-    printf("timerArg: %p\n", preArgs->timerArg);
-
     struct sigevent ev;
 
     memset(&ev, 0, sizeof(struct sigevent));
@@ -155,8 +152,6 @@ void _timerPreFunction(union sigval value) {
     void* argument = preArgs->timerArg;
 
     free(preArgs);
-
-    printf("Argument: %p\n", argument);
 
     callback(argument);
 }
