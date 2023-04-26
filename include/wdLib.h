@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vxworks.h"
+#include <stddef.h>
 
 typedef void* WDOG_ID;
 
@@ -17,7 +18,7 @@ STATUS wdDelete(WDOG_ID wdId);
 /**
  * Start a watchdog timer
  */
-STATUS wdStart(WDOG_ID wdId, int delay, FUNCPTR pRoutine, int parameter);
+STATUS wdStart(WDOG_ID wdId, int delay, FUNCPTR pRoutine, size_t parameter);
 
 /**
  * Cancel a currently counting watchdog

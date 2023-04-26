@@ -44,7 +44,7 @@ STATUS wdDelete(WDOG_ID wdId) {
     return status;
 }
 
-STATUS wdStart(WDOG_ID wdId, int delay, FUNCPTR pRoutine, int parameter) {
+STATUS wdStart(WDOG_ID wdId, int delay, FUNCPTR pRoutine, size_t parameter) {
     vxworksWdTimer_t* timer = (vxworksWdTimer_t*) wdId;
 
     if (timer == NULL) {
@@ -78,7 +78,7 @@ STATUS wdStart(WDOG_ID wdId, int delay, FUNCPTR pRoutine, int parameter) {
 
     memset(&ev, 0, sizeof(struct sigevent));
 
-    val.sival_int = parameter;
+    val.sival_ptr = (void*) parameter;
 
     ev.sigev_notify = SIGEV_THREAD;
     ev.sigev_value = val;
