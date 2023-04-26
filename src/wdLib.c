@@ -153,5 +153,7 @@ void _timerPreFunction(union sigval value) {
 
     free(preArgs);
 
+    printf("Argument: %p\n", argument);
+
     callback(argument);
 }
